@@ -16,7 +16,7 @@ wp_nav_menu(array(
 add_filter('wp_nav_menu_objects', function($items, $args) {
     $active_path = array('0');
     $current_object_id = get_the_ID();
-    $cursor = null;
+    $cursor = !empty($args->root_menu_id) ? $args->root_menu_id : null;
 
     $hierarchical_items = array('0' => array());
     $current_level = &$hierarchical_items['0'];
@@ -48,6 +48,7 @@ add_filter('wp_nav_menu_objects', function($items, $args) {
     }
 
     if ($args->follow_active) {
+        $cursor = null;
         if (count($active_path) > $args->max_level) {
             $cursor = $active_path[$args->max_level - 1];
         } elseif (count($active_path) < $args->start_level) {
@@ -79,3 +80,9 @@ add_filter('wp_nav_menu_objects', function($items, $args) {
         return $items;
     }
 }, 10, 2);
+
+add_shortcode('wp-active-nav', function($atts, $content = null) {
+    $atts['echo'] = false;
+    return wp_nav_menu($atts);
+});
+
