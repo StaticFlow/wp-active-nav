@@ -47,7 +47,7 @@ add_filter('wp_nav_menu_objects', function($items, $args) {
         }
     }
 
-    if ($args->follow_active) {
+    if (isset($args->follow_active) && $args->follow_active) {
         $cursor = null;
         if (count($active_path) > $args->max_level) {
             $cursor = $active_path[$args->max_level - 1];
